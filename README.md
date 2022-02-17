@@ -35,3 +35,5 @@ git clone https://github.com/sudo-win/data-prep-ui.git
   
 Open http://localhost:3000.
 
+![Demo](assets/demo.gif)
+
