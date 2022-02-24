@@ -3,9 +3,13 @@ var router = express.Router()
 const spawn = require('child_process').spawn
 
 router.post('/', function (req, res, next) {
-    console.log(req.body)
-    pyParameter = req.body
+    
+    pyParameter = JSON.stringify(req.body)
+    
+
+    console.log(pyParameter)
     console.log(global.g_filepath)
+
     const pythonProcess = spawn('python', [
         '../python/transform.py',
         pyParameter,
@@ -15,7 +19,7 @@ router.post('/', function (req, res, next) {
     pythonProcess.stdout.pipe(process.stdout)
     return new Promise((resolve, reject) => {
         pythonProcess.stdout.on('data', (data) => {
-            console.log(typeof data)
+            
             resolve(data.toString())
             res.send(data.toString())
 

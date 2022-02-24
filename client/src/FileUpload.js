@@ -39,6 +39,7 @@ export default function FileUpload() {
                 },
             })
             .then((response) => {
+                
                 setSampleRecords(
                     JSON.parse(
                         response.data
@@ -50,6 +51,7 @@ export default function FileUpload() {
                             .replace("'non_null_count'", '"non_null_count"')
                     )['sample_records']
                 )
+                
 
                 setShape(
                     JSON.parse(
@@ -63,6 +65,7 @@ export default function FileUpload() {
                     )['shape']
                 )
 
+                
                 setDtypes(
                     JSON.parse(
                         response.data
@@ -74,7 +77,8 @@ export default function FileUpload() {
                             .replace("'non_null_count'", '"non_null_count"')
                     )['dtypes']
                 )
-
+                
+                
                 setNullCount(
                     JSON.parse(
                         response.data

@@ -8,7 +8,9 @@ import NavBar from './NavBar'
 import NavBarDownload from './NavBarDownload'
 
 function Transform(metadata) {
-    var cols = Object.keys(metadata['message'][0])
+    console.log(metadata)
+    var cols = Object.keys(metadata['message'][3][0])
+    var col_types = Object.values(metadata['message'][3][0])
 
     const [transformJson, setTransformJson] = React.useState({})
     const [sampleRecords, setSampleRecords] = React.useState()
@@ -18,6 +20,13 @@ function Transform(metadata) {
     const [showTransform, setShowTransform] = React.useState(true)
     const [showStats, setShowStats] = React.useState(false)
     var [transformCount, setTransformCount] = React.useState(0)
+    const selectOptions = new Map([
+        ['1', 'std'],
+        ['2', 'mean'],
+        ['3', 'median'],
+        ['4', 'drop'],
+        ['5', 'encode'],
+    ])
 
     const showTransformMethod = (e) => {
         setShowTransform(true)
@@ -26,14 +35,19 @@ function Transform(metadata) {
     const submitTransForm = (event) => {
         event.preventDefault()
 
+        // console.log(event)
+
         transformCount = transformCount + 1
         const eventFormArray = Object.values(event.target)
 
+        // console.log(eventFormArray)
+
         eventFormArray.forEach((element) => {
-            transformJson[element.name] = element.value
+            transformJson[element.name] = selectOptions.get(element.value)
         })
 
         setTransformJson(transformJson)
+        console.log(transformJson)
 
         axios
             .post('/uploadTransform', transformJson, {
@@ -118,21 +132,68 @@ function Transform(metadata) {
                                             className="col-sm-2 col-form-label col-form-label-lg"
                                             key={index}
                                         >
-                                            {col}
+                                            {col}-{col_types[index]}
                                         </label>
-                                        <div className="col-sm-10">
+
+                                        {/* <div className="col-sm-3">
                                             <input
                                                 type="text"
-                                                className="form-control form-control-lg"
+                                                className="form-control" //form-control-lg
                                                 id="colFormLabelLg"
                                                 placeholder="Replace null values with"
                                                 key={index}
                                                 name={col}
                                             />
-                                        </div>
+                                        </div> */}
+
+                                        {col_types[index].endsWith('64') && (
+                                            <div className="col-sm-3">
+                                                <select
+                                                    className="form-select form-select-sm"
+                                                    aria-label=".form-select-sm example"
+                                                    name={col}
+                                                >
+                                                    <option selected>
+                                                        Replace nulls with
+                                                    </option>
+                                                    <option value="1">
+                                                        std
+                                                    </option>
+                                                    <option value="2">
+                                                        mean
+                                                    </option>
+                                                    <option value="3">
+                                                        median
+                                                    </option>
+                                                    <option value="4">
+                                                        drop
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        )}
+                                        {!col_types[index].endsWith('64') && (
+                                            <div className="col-sm-3">
+                                                <select
+                                                    className="form-select form-select-sm"
+                                                    aria-label=".form-select-sm example"
+                                                    name={col}
+                                                >
+                                                    <option selected>
+                                                        Replace nulls with
+                                                    </option>
+                                                    <option value="5">
+                                                        Encode
+                                                    </option>
+                                                    <option value="4">
+                                                        Drop Column
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        )}
                                     </div>
                                 )
                             })}
+
                             <div className="d-grid gap-2">
                                 <button
                                     className="btn btn-primary btn-outline-info"

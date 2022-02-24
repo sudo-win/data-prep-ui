@@ -1,7 +1,12 @@
 import React from 'react'
 
 const DTypes = (jsonstring) => {
-    var dtypes = jsonstring['message']
+    
+    
+
+    var dtypes = jsonstring['message'][3]
+
+    console.log(dtypes)
 
     return (
         <table className="table table-bordered">
