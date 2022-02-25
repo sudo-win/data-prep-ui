@@ -6,7 +6,7 @@ const DTypes = (jsonstring) => {
 
     var dtypes = jsonstring['message'][3]
 
-    console.log(dtypes)
+    // console.log(dtypes)
 
     return (
         <table className="table table-bordered">

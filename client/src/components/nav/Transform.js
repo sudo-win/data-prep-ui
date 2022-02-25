@@ -8,9 +8,14 @@ import NavBar from './NavBar'
 import NavBarDownload from './NavBarDownload'
 
 function Transform(metadata) {
-    console.log(metadata)
+    // console.log(metadata)
     var cols = Object.keys(metadata['message'][3][0])
     var col_types = Object.values(metadata['message'][3][0])
+
+    var mean_map =  new Map(Object.entries(JSON.parse(JSON.stringify(metadata['message'][0]))))
+    var median_map =  new Map(Object.entries(JSON.parse(JSON.stringify(metadata['message'][1]))))
+    var std_map =  new Map(Object.entries(JSON.parse(JSON.stringify(metadata['message'][2]))))
+
 
     const [transformJson, setTransformJson] = React.useState({})
     const [sampleRecords, setSampleRecords] = React.useState()
@@ -38,6 +43,7 @@ function Transform(metadata) {
         // console.log(event)
 
         transformCount = transformCount + 1
+
         const eventFormArray = Object.values(event.target)
 
         // console.log(eventFormArray)
@@ -47,7 +53,7 @@ function Transform(metadata) {
         })
 
         setTransformJson(transformJson)
-        console.log(transformJson)
+        // console.log(transformJson)
 
         axios
             .post('/uploadTransform', transformJson, {
@@ -105,6 +111,7 @@ function Transform(metadata) {
                 )
                 setShowTransform(false)
                 setShowStats(true)
+                setTransformCount(transformCount)
             })
             .catch((error) => {
                 console.log(error)
@@ -115,9 +122,9 @@ function Transform(metadata) {
     return (
         <div>
             {transformCount > 0 ? (
-                <NavBar showTransformMethod={showTransformMethod} />
-            ) : (
                 <NavBarDownload showTransformMethod={showTransformMethod} />
+            ) : (
+                <NavBar showTransformMethod={showTransformMethod} />
             )}
 
             {showTransform && (
@@ -129,63 +136,57 @@ function Transform(metadata) {
                                     <div className="row">
                                         <label
                                             htmlFor="colFormLabelLg"
-                                            className="col-sm-2 col-form-label col-form-label-lg"
+                                            className="col-sm-3 col-form-label col-form-label-lg"
                                             key={index}
                                         >
-                                            {col}-{col_types[index]}
+                                            {col}
+                                            <sub>
+                                                type - {col_types[index]}
+                                            </sub>
                                         </label>
 
-                                        {/* <div className="col-sm-3">
-                                            <input
-                                                type="text"
-                                                className="form-control" //form-control-lg
-                                                id="colFormLabelLg"
-                                                placeholder="Replace null values with"
-                                                key={index}
-                                                name={col}
-                                            />
-                                        </div> */}
-
-                                        {col_types[index].endsWith('64') && (
+                                        {(col_types[index].startsWith('int') || col_types[index].startsWith('float')) && (
                                             <div className="col-sm-3">
                                                 <select
                                                     className="form-select form-select-sm"
                                                     aria-label=".form-select-sm example"
                                                     name={col}
+                                                    key={index}
                                                 >
-                                                    <option selected>
-                                                        Replace nulls with
+                                                    <option>
+                                                        Column operation
                                                     </option>
                                                     <option value="1">
-                                                        std
+                                                        replace nulls with std {std_map.get(col)}
                                                     </option>
                                                     <option value="2">
-                                                        mean
+                                                        replace nulls with mean {mean_map.get(col)}
                                                     </option>
                                                     <option value="3">
-                                                        median
+                                                        replace nulls with median {median_map.get(col)}
                                                     </option>
                                                     <option value="4">
-                                                        drop
+                                                        drop column
                                                     </option>
                                                 </select>
                                             </div>
                                         )}
-                                        {!col_types[index].endsWith('64') && (
+                                        {!(col_types[index].startsWith('int') || col_types[index].startsWith('float')) && (
                                             <div className="col-sm-3">
                                                 <select
                                                     className="form-select form-select-sm"
                                                     aria-label=".form-select-sm example"
                                                     name={col}
+                                                    key={index}
                                                 >
-                                                    <option selected>
-                                                        Replace nulls with
+                                                    <option>
+                                                        Column operation
                                                     </option>
                                                     <option value="5">
-                                                        Encode
+                                                        encode column
                                                     </option>
                                                     <option value="4">
-                                                        Drop Column
+                                                        drop column
                                                     </option>
                                                 </select>
                                             </div>
