@@ -10,6 +10,9 @@ A UI tool to cleanse the csv files.
 ```bash
 pip install pandas
 ```
+```bash
+pip install sklearn
+```
 - Clone the repo and install the dependencies.
 ```
 git clone https://github.com/sudo-win/data-prep-ui.git
@@ -35,5 +38,7 @@ git clone https://github.com/sudo-win/data-prep-ui.git
   
 Open http://localhost:3000.
 
-![Demo](assets/demo.gif)
+![Demo1](assets/demo1.gif)
+
+![Demo2](assets/demo2.gif)
 
