@@ -38,7 +38,7 @@ git clone https://github.com/sudo-win/data-prep-ui.git
   
 Open http://localhost:3000.
 
-![Demo1](assets/demo1.gif)
+![Demo1](assets/demo-1.gif)
 
-![Demo2](assets/demo2.gif)
+![Demo2](assets/demo-2.gif)
 
